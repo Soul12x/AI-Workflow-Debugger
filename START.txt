@@ -1,0 +1,105 @@
+🤖 WORKFLOW DEBUGGER - IA PARA ANÁLISIS DE AUTOMATIZACIONES
+==============================================================
+
+¡Tu aplicación está lista! 🎉
+
+📋 INICIO RÁPIDO (2 minutos)
+─────────────────────────────
+
+Windows:
+  cd "AI Workflow Debugger"
+  setup.bat
+
+PowerShell:
+  cd "AI Workflow Debugger"
+  .\setup.ps1
+
+Manual:
+  cd backend && npm install & npm run dev
+  cd frontend && npm install & npm run dev
+  Abre: http://localhost:5173
+
+
+📚 DOCUMENTACIÓN
+────────────────
+
+START HERE:
+  ⚡ QUICKSTART.md ........... Empieza en 5 minutos
+  📖 README.md .............. Guía completa
+
+MÁS INFO:
+  🏗️ ARCHITECTURE.md ......... Cómo funciona internamente
+  🚀 DEPLOYMENT.md ........... Cómo publicar en producción
+  📋 EXAMPLES.md ............ 7 ejemplos de workflows
+  🔧 TROUBLESHOOTING.md ..... Solucionar problemas
+  🎉 PROJECT.md ............ Resumen del proyecto
+
+
+🚀 EMPEZAR AHORA
+────────────────
+
+1. Abre terminal en esta carpeta
+2. Ejecuta: setup.bat (Windows) o setup.ps1 (PowerShell)
+3. En backend: npm run dev
+4. En frontend: npm run dev
+5. Abre navegador: http://localhost:5173
+
+
+📝 NECESITAS HACER
+────────────────
+
+⚠️  IMPORTANTE:
+  1. Obtén API key en https://console.anthropic.com/
+  2. Edita: backend/.env
+  3. Reemplaza: ANTHROPIC_API_KEY=sk-ant-... (tu clave aquí)
+
+
+🧪 PROBAR
+─────────
+
+Una vez ejecutando:
+  1. Click en "Usar Ejemplo"
+  2. Click en "Analizar Workflow"
+  3. ¡Espera 2-5 segundos!
+  4. Ve el análisis generado por IA
+
+
+🆘 PROBLEMAS
+────────────
+
+Ver: TROUBLESHOOTING.md para soluciones comunes
+
+
+✅ FUNCIONALIDADES
+──────────────────
+
+✓ Análisis de workflows con IA
+✓ Detección de conflictos
+✓ Explicación paso a paso
+✓ Sugerencias inteligentes
+✓ Historial de análisis
+✓ Validación robusta
+✓ UI moderna con Tailwind CSS
+
+
+💻 TECH STACK
+──────────────
+
+Frontend: React 18 + TypeScript + Vite + Zustand + Tailwind
+Backend: Node.js + Express + TypeScript + Anthropic API
+Deploy: Firebase (frontend) + Railway (backend)
+
+
+🎯 ¿NECESITAS AYUDA?
+─────────────────────
+
+1. Lee QUICKSTART.md (5 minutos)
+2. Lee TROUBLESHOOTING.md (problemas comunes)
+3. Lee README.md (guía completa)
+4. Revisa EXAMPLES.md (ejemplos de uso)
+
+
+─────────────────────────────────────────────────────────────
+
+Made with ❤️ using React, Express, TypeScript y Claude AI
+Version 1.0.0 MVP - Marzo 2026
