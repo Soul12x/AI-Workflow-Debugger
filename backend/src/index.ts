@@ -16,6 +16,7 @@ app.get('/health', (req: Request, res: Response) => {
 });
 
 /** Detecta si un objeto es un workflow directo estilo Kustomer */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isDirectWorkflow(data: any): boolean {
   return (
     data &&
@@ -116,6 +117,6 @@ app.use((req: Request, res: Response) => {
 
 // Iniciar servidor
 app.listen(config.port, () => {
-  console.log(`✅ Server ejecutándose en puerto ${config.port}`);
-  console.log(`Entorno: ${config.nodeEnv}`);
+  console.warn(`✅ Server ejecutándose en puerto ${config.port}`);
+  console.warn(`Entorno: ${config.nodeEnv}`);
 });

@@ -4,7 +4,7 @@ export interface ValidationError {
 }
 
 /** Detecta si un objeto es un workflow directo (Kustomer style) */
-function isDirectWorkflow(obj: Record<string, unknown>): boolean {
+function _isDirectWorkflow(obj: Record<string, unknown>): boolean {
   return (
     obj['type'] === 'workflow' ||
     !!obj['id'] ||
@@ -13,7 +13,7 @@ function isDirectWorkflow(obj: Record<string, unknown>): boolean {
 }
 
 /** Detecta si un objeto es el formato actual (workflow + logs + attributes) */
-function isLegacyFormat(obj: Record<string, unknown>): boolean {
+function _isLegacyFormat(obj: Record<string, unknown>): boolean {
   return !!(obj['workflow'] && typeof obj['workflow'] === 'object');
 }
 

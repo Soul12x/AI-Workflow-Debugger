@@ -5,7 +5,7 @@ import { checkHealth } from './api';
 
 function App() {
   const { reset } = useAnalysisStore();
-  const [apiHealth, setApiHealth] = useState<boolean | null>(null);
+  const [_apiHealth, setApiHealth] = useState<boolean | null>(null);
 
   useEffect(() => {
     // Verificar que el backend está disponible

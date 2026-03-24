@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 
 /** Detecta si un objeto es un workflow directo estilo Kustomer */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isDirectWorkflow(data: any): boolean {
   return (
     data &&
@@ -139,6 +140,7 @@ describe('Workflow Detection', () => {
         workflow: { name: 'Test' }
       };
       expect(request.workflow).toBeDefined();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect((request as any).logs).toBeUndefined();
     });
 

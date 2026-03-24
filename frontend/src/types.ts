@@ -1,9 +1,9 @@
 export interface WorkflowAnalysisRequest {
-  workflow?: Record<string, any>;
+  workflow?: Record<string, unknown>;
   logs?: string[];
-  attributes?: Record<string, any>;
+  attributes?: Record<string, unknown>;
   context?: string;
-  workflows?: Record<string, any>[]; // Para comparación
+  workflows?: Record<string, unknown>[]; // Para comparación
 }
 
 export interface AIAnalysisResponse {
