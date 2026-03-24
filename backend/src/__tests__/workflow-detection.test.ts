@@ -139,7 +139,7 @@ describe('Workflow Detection', () => {
         workflow: { name: 'Test' }
       };
       expect(request.workflow).toBeDefined();
-      expect(request.logs).toBeUndefined();
+      expect((request as any).logs).toBeUndefined();
     });
 
     it('should include optional context field', () => {
