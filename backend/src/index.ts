@@ -31,9 +31,21 @@ function isDirectWorkflow(data: any): boolean {
 // Endpoint principal de análisis
 app.post('/analyze', async (req: Request, res: Response<AIAnalysisResponse | ErrorResponse>) => {
   try {
-    const { workflows, context } = req.body;
+    // Detectar si req.body es directamente un array o si está en req.body.workflows
+    let workflows: unknown;
+    let context: unknown;
 
-    // Si el body es un array, es comparación de múltiples workflows
+    if (Array.isArray(req.body)) {
+      // Array directo: [workflow1, workflow2]
+      workflows = req.body;
+      context = undefined;
+    } else {
+      // Objeto: {workflows: [...], context: "..."}
+      workflows = req.body.workflows;
+      context = req.body.context;
+    }
+
+    // Si workflows es un array, es comparación de múltiples workflows
     if (Array.isArray(workflows)) {
       if (workflows.length < 2) {
         return res.status(400).json({
