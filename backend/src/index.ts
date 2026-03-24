@@ -33,7 +33,7 @@ app.post('/analyze', async (req: Request, res: Response<AIAnalysisResponse | Err
   try {
     // Detectar si req.body es directamente un array o si está en req.body.workflows
     let workflows: unknown;
-    let context: unknown;
+    let context: string | undefined;
 
     if (Array.isArray(req.body)) {
       // Array directo: [workflow1, workflow2]
@@ -42,7 +42,7 @@ app.post('/analyze', async (req: Request, res: Response<AIAnalysisResponse | Err
     } else {
       // Objeto: {workflows: [...], context: "..."}
       workflows = req.body.workflows;
-      context = req.body.context;
+      context = typeof req.body.context === 'string' ? req.body.context : undefined;
     }
 
     // Si workflows es un array, es comparación de múltiples workflows
