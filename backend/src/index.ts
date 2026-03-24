@@ -1,45 +1,90 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { config } from './config.js';
-import { analyzeWorkflow } from './ai-service.js';
-import { WorkflowAnalysisRequest, ErrorResponse, AIAnalysisResponse } from './types.js';
+import { analyzeWorkflow, compareWorkflows } from './ai-service.js';
+import { WorkflowAnalysisRequest, ComparisonRequest, ErrorResponse, AIAnalysisResponse } from './types.js';
 
 const app = express();
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
-app.use(cors({ origin: config.corsOrigin }));
+app.use(cors({ origin: config.corsOrigin, credentials: true }));
 
 // Health check
 app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok' });
 });
 
+/** Detecta si un objeto es un workflow directo estilo Kustomer */
+function isDirectWorkflow(data: any): boolean {
+  return (
+    data &&
+    typeof data === 'object' &&
+    !Array.isArray(data) &&
+    (data.type === 'workflow' ||
+      data.id ||
+      (data.attributes && typeof data.attributes === 'object'))
+  );
+}
+
 // Endpoint principal de análisis
 app.post('/analyze', async (req: Request, res: Response<AIAnalysisResponse | ErrorResponse>) => {
   try {
-    // Validar que los campos requeridos estén presentes
-    const { workflow, logs, attributes } = req.body;
+    const { workflows, context } = req.body;
 
-    if (!workflow || !logs || !attributes) {
-      return res.status(400).json({
-        error: 'Faltan campos requeridos',
-        details: 'Se requieren: workflow, logs, attributes'
-      });
+    // Si el body es un array, es comparación de múltiples workflows
+    if (Array.isArray(workflows)) {
+      if (workflows.length < 2) {
+        return res.status(400).json({
+          error: 'Se requieren al menos 2 workflows para comparar',
+          details: 'Envía un array con 2 o más workflows'
+        });
+      }
+
+      const comparisonRequest: ComparisonRequest = {
+        workflows,
+        context
+      };
+
+      const analysis = await compareWorkflows(comparisonRequest);
+      return res.json(analysis);
     }
 
-    if (!Array.isArray(logs)) {
+    // Si no hay workflows, intentar interpretar req.body como workflow directo o formato actual
+    let request: WorkflowAnalysisRequest;
+
+    if (isDirectWorkflow(req.body)) {
+      // Es un workflow directo (Kustomer format o similar)
+      request = {
+        workflow: req.body,
+        logs: [],
+        attributes: {},
+        context
+      };
+    } else if (req.body.workflow) {
+      // Es el formato actual {workflow, logs?, attributes?, context?}
+      const { workflow, logs, attributes } = req.body;
+
+      if (!workflow) {
+        return res.status(400).json({
+          error: 'Faltan campos requeridos',
+          details: 'Se requiere: workflow'
+        });
+      }
+
+      request = {
+        workflow,
+        logs: logs || [],
+        attributes: attributes || {},
+        context
+      };
+    } else {
       return res.status(400).json({
-        error: 'Formato inválido',
-        details: 'logs debe ser un array de strings'
+        error: 'Formato no reconocido',
+        details:
+          'Envía un workflow directo, un objeto con {workflow, logs?, attributes?, context?}, o un array de workflows para comparar'
       });
     }
-
-    const request: WorkflowAnalysisRequest = {
-      workflow,
-      logs,
-      attributes
-    };
 
     const analysis = await analyzeWorkflow(request);
     res.json(analysis);

@@ -1,65 +1,58 @@
-import { WorkflowAnalysisRequest } from './types';
-
 export interface ValidationError {
   field: string;
   message: string;
 }
 
-export function validateInput(data: any): ValidationError[] {
+/** Detecta si un objeto es un workflow directo (Kustomer style) */
+function isDirectWorkflow(obj: Record<string, unknown>): boolean {
+  return (
+    obj['type'] === 'workflow' ||
+    !!obj['id'] ||
+    !!(obj['attributes'] && typeof obj['attributes'] === 'object')
+  );
+}
+
+/** Detecta si un objeto es el formato actual (workflow + logs + attributes) */
+function isLegacyFormat(obj: Record<string, unknown>): boolean {
+  return !!(obj['workflow'] && typeof obj['workflow'] === 'object');
+}
+
+export function validateInput(data: unknown): ValidationError[] {
   const errors: ValidationError[] = [];
 
-  // Validar que es un objeto
-  if (!data || typeof data !== 'object') {
+  // Validación MUY flexible: permitir prácticamente cualquier input válido
+  // Dejar que el backend sea el que valide realmente
+
+  // Solo rechazar si es completamente vacío o inválido
+  if (data === null || data === undefined) {
     errors.push({
       field: 'root',
-      message: 'El input debe ser un objeto JSON'
+      message: 'El campo está vacío'
     });
     return errors;
   }
 
-  // Validar workflow
-  if (!data.workflow || typeof data.workflow !== 'object') {
-    errors.push({
-      field: 'workflow',
-      message: 'workflow es requerido y debe ser un objeto'
-    });
-  } else {
-    if (!data.workflow.name && !data.workflow.conditions && !data.workflow.id) {
+  // Si es un string, permitir (el backend parseará)
+  if (typeof data === 'string') {
+    if (data.trim().length === 0) {
       errors.push({
-        field: 'workflow',
-        message: 'workflow debe contener al menos: name, conditions o id'
+        field: 'root',
+        message: 'El campo está vacío'
       });
     }
+    return errors;
   }
 
-  // Validar logs
-  if (!Array.isArray(data.logs)) {
-    errors.push({
-      field: 'logs',
-      message: 'logs debe ser un array'
-    });
-  } else if (data.logs.length === 0) {
-    errors.push({
-      field: 'logs',
-      message: 'logs no puede estar vacío'
-    });
-  } else {
-    const invalidLogs = data.logs.filter((log: any) => typeof log !== 'string');
-    if (invalidLogs.length > 0) {
-      errors.push({
-        field: 'logs',
-        message: 'Todos los logs deben ser strings'
-      });
-    }
+  // Si es un objeto o array, permitir (el backend lo validará)
+  if (typeof data === 'object') {
+    return errors;
   }
 
-  // Validar attributes
-  if (!data.attributes || typeof data.attributes !== 'object') {
-    errors.push({
-      field: 'attributes',
-      message: 'attributes es requerido y debe ser un objeto'
-    });
-  }
+  // Cualquier otro tipo, rechazar
+  errors.push({
+    field: 'root',
+    message: 'El input debe ser JSON válido o texto'
+  });
 
   return errors;
 }

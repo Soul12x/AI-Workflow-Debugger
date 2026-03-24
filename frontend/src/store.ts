@@ -1,16 +1,16 @@
 import { create } from 'zustand';
-import { WorkflowAnalysisRequest, AIAnalysisResponse, AnalysisHistory } from './types';
+import { AIAnalysisResponse, AnalysisHistory } from './types';
 
 interface AnalysisStore {
   // Estado
-  input: WorkflowAnalysisRequest;
+  input: unknown;
   output: AIAnalysisResponse | null;
   loading: boolean;
   error: string | null;
   history: AnalysisHistory[];
 
   // Acciones
-  setInput: (input: WorkflowAnalysisRequest) => void;
+  setInput: (input: unknown) => void;
   setOutput: (output: AIAnalysisResponse) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -19,7 +19,7 @@ interface AnalysisStore {
   reset: () => void;
 }
 
-const defaultInput: WorkflowAnalysisRequest = {
+const defaultInput: unknown = {
   workflow: {},
   logs: [],
   attributes: {}

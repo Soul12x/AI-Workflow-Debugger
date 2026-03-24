@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { WorkflowAnalysisRequest, AIAnalysisResponse } from './types';
+import { AIAnalysisResponse } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -11,7 +11,14 @@ const apiClient: AxiosInstance = axios.create({
   }
 });
 
-export async function analyzeWorkflow(request: WorkflowAnalysisRequest): Promise<AIAnalysisResponse> {
+/**
+ * Analiza un workflow o compara múltiples workflows
+ * @param request - Puede ser:
+ *   - Un workflow directo (Kustomer style)
+ *   - Un objeto con {workflow, logs?, attributes?, context?}
+ *   - Un array de workflows para comparación
+ */
+export async function analyzeWorkflow(request: unknown): Promise<AIAnalysisResponse> {
   const response = await apiClient.post<AIAnalysisResponse>('/analyze', request);
   return response.data;
 }

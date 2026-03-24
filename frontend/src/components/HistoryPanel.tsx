@@ -2,6 +2,36 @@ import React from 'react';
 import { useAnalysisStore } from '../store';
 import { AnalysisHistory } from '../types';
 
+/** Extrae un nombre descriptivo del input sin importar su formato */
+function getInputLabel(input: unknown, index: number): string {
+  if (!input) return `Análisis ${index}`;
+
+  if (Array.isArray(input)) {
+    return `Comparación (${input.length} workflows)`;
+  }
+
+  if (typeof input === 'object') {
+    const obj = input as Record<string, unknown>;
+
+    // Si tiene workflow.name
+    if (obj.workflow && typeof obj.workflow === 'object') {
+      const workflow = obj.workflow as Record<string, unknown>;
+      if (workflow.name) return String(workflow.name);
+    }
+
+    // Si es un workflow directo con name
+    if (obj.name) return String(obj.name);
+
+    // Si es un workflow directo con id
+    if (obj.id) return `Workflow ${String(obj.id).slice(0, 8)}`;
+
+    // Si tiene type
+    if (obj.type) return `${String(obj.type)} workflow`;
+  }
+
+  return `Análisis ${index}`;
+}
+
 export const HistoryPanel: React.FC = () => {
   const { history, setInput, setOutput } = useAnalysisStore();
 
@@ -34,7 +64,7 @@ export const HistoryPanel: React.FC = () => {
             <div className="flex justify-between items-start gap-2">
               <div className="flex-1">
                 <p className="font-semibold text-white group-hover:text-blue-300 transition">
-                  {idx + 1}. {item.input.workflow.name || 'Workflow sin nombre'}
+                  {idx + 1}. {getInputLabel(item.input, idx + 1)}
                 </p>
                 <p className="text-sm text-slate-400">
                   {new Date(item.timestamp).toLocaleString('es-ES')}

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useAnalysisStore } from '../store';
 import { analyzeWorkflow } from '../api';
-import { WorkflowAnalysisRequest } from '../types';
 import { validateInput, formatValidationErrors } from '../validation';
 
 export const AnalyzeButton: React.FC = () => {
@@ -18,13 +17,13 @@ export const AnalyzeButton: React.FC = () => {
       setError(null);
       setLoading(true);
 
-      const response = await analyzeWorkflow(input as WorkflowAnalysisRequest);
+      const response = await analyzeWorkflow(input);
       setOutput(response);
 
       addToHistory({
         id: Date.now().toString(),
         timestamp: Date.now(),
-        input: input as WorkflowAnalysisRequest,
+        input: input,
         output: response
       });
     } catch (error) {
@@ -49,13 +48,11 @@ export const AnalyzeButton: React.FC = () => {
     >
       {loading ? (
         <span className="flex items-center justify-center gap-3">
-          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          <span>Analizando...</span>
+          <span className="animate-spin">⏳</span>
+          Analizando...
         </span>
       ) : (
-        <span className="flex items-center justify-center gap-2">
-          <span>🚀</span> Analizar Workflow
-        </span>
+        '🚀 Analizar Workflow'
       )}
     </button>
   );

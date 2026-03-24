@@ -25,12 +25,14 @@ export const ResultsPanel: React.FC = () => {
 
   return (
     <div className="w-full space-y-4">
-      <div className="bg-gradient-to-br from-red-900/40 to-red-800/40 rounded-xl shadow-lg p-6 border border-red-700/50">
-        <h3 className="text-lg font-bold text-red-300 mb-3 flex items-center gap-2">
-          <span className="text-2xl">🔴</span> Causa Raíz
-        </h3>
-        <p className="text-slate-100 leading-relaxed">{output.root_cause}</p>
-      </div>
+      {output.root_cause && (
+        <div className="bg-gradient-to-br from-red-900/40 to-red-800/40 rounded-xl shadow-lg p-6 border border-red-700/50">
+          <h3 className="text-lg font-bold text-red-300 mb-3 flex items-center gap-2">
+            <span className="text-2xl">🔴</span> Causa Raíz
+          </h3>
+          <p className="text-slate-100 leading-relaxed">{output.root_cause}</p>
+        </div>
+      )}
 
       <div className="bg-gradient-to-br from-blue-900/40 to-blue-800/40 rounded-xl shadow-lg p-6 border border-blue-700/50">
         <h3 className="text-lg font-bold text-blue-300 mb-3 flex items-center gap-2">
@@ -38,6 +40,15 @@ export const ResultsPanel: React.FC = () => {
         </h3>
         <p className="text-slate-100 whitespace-pre-wrap leading-relaxed">{output.explanation}</p>
       </div>
+
+      {output.comparison && (
+        <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-800/40 rounded-xl shadow-lg p-6 border border-indigo-700/50">
+          <h3 className="text-lg font-bold text-indigo-300 mb-3 flex items-center gap-2">
+            <span className="text-2xl">🔄</span> Comparación
+          </h3>
+          <p className="text-slate-100 whitespace-pre-wrap leading-relaxed">{output.comparison}</p>
+        </div>
+      )}
 
       {output.conflicts && output.conflicts.length > 0 && (
         <div className="bg-gradient-to-br from-yellow-900/40 to-yellow-800/40 rounded-xl shadow-lg p-6 border border-yellow-700/50">
